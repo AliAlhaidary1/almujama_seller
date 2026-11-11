@@ -11,6 +11,9 @@ const tracked = execSync('git ls-files -z', { encoding: 'utf8', maxBuffer: 32 * 
   .split('\0')
   .filter(Boolean);
 
+// The scanner contains the secret/webshell patterns as literals; never scan itself.
+const SKIP_SELF = /(^|\/)scripts\/security-scan\.mjs$/;
+
 const SKIP_EXT = new Set([
   '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.svg', '.woff', '.woff2', '.ttf', '.otf',
   '.jar', '.jks', '.keystore', '.zip', '.gz', '.mp4', '.pdf', '.bin', '.lock', '.so', '.gradle',
@@ -38,6 +41,7 @@ const EVAL_RE = /\beval\s*\([\s\S]{0,200}(\$_GET|\$_POST|\$_REQUEST)/i;
 
 const findings = [];
 for (const file of tracked) {
+  if (SKIP_SELF.test(file)) continue;
   if (/\.(png|jpg|jpeg|gif|webp|ico|svg|woff2?|ttf|otf|jar|jks|keystore|zip|gz|mp4|pdf|bin|so)$/i.test(file)) continue;
   if (SKIP_PATH.test(file)) continue;
   let contents = '';
