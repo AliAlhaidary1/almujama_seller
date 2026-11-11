@@ -49,12 +49,12 @@ class AppController extends ChangeNotifier {
   bool get isDeactivated => sellerStatus == 3;
   bool get isRemoved => sellerStatus == 7;
   bool get canWrite => sellerStatus == 1;
-  // مطابق للخلفية: CheckSellerStatus + SellerController.getSettings
+  // Deny by default (matches backend: customer_privacy must equal 1 to allow).
   bool get canViewCustomerDetail => J.flag(
     seller['customer_privacy'] ??
         settings['view_customer_detail'] ??
         settings['customer_privacy'] ??
-        1,
+        0,
   );
   bool get canViewOrderOtp =>
       J.flag(seller['view_order_otp'] ?? settings['view_order_otp'] ?? 0);
