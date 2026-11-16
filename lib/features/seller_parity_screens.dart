@@ -450,7 +450,7 @@ class _SellerOrdersNewScreenState extends State<SellerOrdersNewScreen> {
                           ),
                         ),
                         Text(
-                          'الأصناف: ${itemsList.length} | الإجمالي: ${Fmt.money(o['final_total'])}',
+                          'الأصناف: ${itemsList.length} | الإجمالي: ${Fmt.money(o['subtotal'] ?? o['product_payable'])}',
                           style: const TextStyle(fontSize: 13),
                         ),
                         Text(
@@ -887,7 +887,7 @@ class _SellerOrderNewDetailsScreenState
                   ),
                 ),
                 Text(
-                  'الإجمالي: ${Fmt.money(order['final_total'])}',
+                  'الإجمالي: ${Fmt.money(order['subtotal'] ?? order['product_payable'])}',
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
                 if (courier.isNotEmpty)
