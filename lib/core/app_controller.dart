@@ -102,8 +102,8 @@ class AppController extends ChangeNotifier {
 
   /// Platform open/closed from admin store settings (informational for sellers).
   bool get platformOpen {
-    final o = J.str(settings['platform_opening_time']);
-    final c = J.str(settings['platform_closing_time']);
+    final o = J.str(settings['platform_opening_time']).trim();
+    final c = J.str(settings['platform_closing_time']).trim();
     if (o.isEmpty && c.isEmpty) return true;
     if (o.isEmpty || c.isEmpty) return true;
     if (o == c) return false;
