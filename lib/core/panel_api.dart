@@ -358,20 +358,12 @@ class PanelApi {
     });
   }
 
-  Future<ApiResult> returnRequests() => get('seller/return_requests');
-  Future<ApiResult> updateReturn({
-    required dynamic id,
-    required int status,
-    String remark = '',
-    dynamic deliveryBoyId,
-  }) {
-    return post('return_requests/update', {
-      'id': id,
-      'status': status,
-      'remark': remark,
-      if (deliveryBoyId != null) 'delivery_boy_id': deliveryBoyId,
-    });
-  }
+  // NOTE (Phase 15): the legacy `seller/return_requests` list endpoint does
+  // not exist in the backend (was 404). Returns are served by the new
+  // commerce API: GET seller/seller_orders?has_return=1 and
+  // POST seller/seller_orders/{id}/returns/{order_item_id}/reject.
+  // The dead helpers that called the missing routes were removed so a
+  // future caller cannot silently hit a 404 again.
 
   Future<ApiResult> units() => get('seller/units');
   Future<ApiResult> saveUnit(Map<String, dynamic> body) =>

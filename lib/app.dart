@@ -292,7 +292,7 @@ class SellerShell extends StatelessWidget {
                   IconButton(
                     key: isHome ? AppTutorialKeys.notifications : null,
                     tooltip: 'الطلبات',
-                    onPressed: () => context.push('/orders'),
+                    onPressed: () => context.push('/seller-orders'),
                     icon: Badge(
                       isLabelVisible:
                           (app.dashboard['pending_order_count'] ?? 0) > 0,

@@ -246,7 +246,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         label: 'طلبات قيد التنفيذ',
                         value: '$pendingOrders',
                         iconColor: AppColors.orange,
-                        onTap: () => context.push('/orders'),
+                        onTap: () => context.push('/seller-orders'),
                       ),
                       KpiMetricCard(
                         icon: Icons.check_circle_outline,
@@ -254,7 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         value: '$completedOrders',
                         subtitle: 'الإجمالي: $totalOrders',
                         iconColor: AppColors.success,
-                        onTap: () => context.push('/orders'),
+                        onTap: () => context.push('/seller-orders'),
                       ),
                       KpiMetricCard(
                         icon: Icons.inventory_2_outlined,
@@ -296,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     QuickActionButton(
                       icon: Icons.receipt_long,
                       label: 'الطلبات الجديدة',
-                      onTap: () => context.push('/orders'),
+                      onTap: () => context.push('/seller-orders'),
                     ),
                     const SizedBox(width: 10),
                     QuickActionButton(
