@@ -230,7 +230,7 @@ class PanelApi {
     return post('seller/update_status', {
       'order_id': orderId,
       'status_id': statusId,
-      if (deliveryBoyId != null) 'delivery_boy_id': deliveryBoyId,
+      'delivery_boy_id': ?deliveryBoyId,
     });
   }
 
@@ -250,7 +250,7 @@ class PanelApi {
       'limit': limit,
       'offset': offset,
       if (search.isNotEmpty) 'search': search,
-      if (sellerId != null) 'seller_id': sellerId,
+      'seller_id': ?sellerId,
     };
     final result = await get('seller/get_products', query);
     if (result.ok) return result;
@@ -279,7 +279,7 @@ class PanelApi {
     return get('seller/products/ratings_list', {
       'include_hidden': 1,
       'limit': 50,
-      if (productId != null) 'product_id': productId,
+      'product_id': ?productId,
     });
   }
 
@@ -458,7 +458,7 @@ class PanelApi {
   }) => post('seller/business_hours', {
     'opening_time': openingTime,
     'closing_time': closingTime,
-    if (statusOverride != null) 'status_override': statusOverride,
+    'status_override': ?statusOverride,
   });
   Future<ApiResult> changePassword(Map<String, dynamic> body) =>
       post('system_users/change_password', body);
@@ -474,7 +474,7 @@ class PanelApi {
   Future<ApiResult> countries() => get('seller/countries');
   Future<ApiResult> mainCategories({dynamic categoryId, String search = ''}) =>
       get('seller/main_categories', {
-        if (categoryId != null) 'category_id': categoryId,
+        'category_id': ?categoryId,
         if (search.isNotEmpty) 'search': search,
       });
   Future<ApiResult> categoriesProductCount() =>
@@ -548,7 +548,7 @@ class PanelApi {
   }) => post('seller/seller_orders/$id/fulfillment', {'status': status});
   Future<ApiResult> sellerOrderCancel({required dynamic id, String? reason}) =>
       post('seller/seller_orders/$id/cancel', {
-        if (reason != null) 'reason': reason,
+        'reason': ?reason,
       });
   // رفض صنف: POST seller/seller_orders/{id}/reject-item {order_item_id*, reason?}
   Future<ApiResult> sellerOrderRejectItem({
@@ -575,7 +575,7 @@ class PanelApi {
     String? failureReason,
   }) => post('seller/delivery_tasks/$taskId/status', {
     'status': status,
-    if (cashReceived != null) 'cash_received': cashReceived,
+    'cash_received': ?cashReceived,
     if (failureReason != null && failureReason.trim().isNotEmpty)
       'failure_reason': failureReason.trim(),
   });
@@ -639,7 +639,7 @@ class PanelApi {
     'campaign_id': campaignId,
     'type': type,
     'id': id,
-    if (sortOrder != null) 'sort_order': sortOrder,
+    'sort_order': ?sortOrder,
   });
   Future<ApiResult> detachCampaign({
     required dynamic campaignId,

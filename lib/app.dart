@@ -48,30 +48,32 @@ GoRouter buildRouter() {
       }
       // Web parity (SellerPendingStatus.vue): pending/rejected/no-store stay
       // on the status screen until approved.
-      if (app.isLoggedIn && app.needsPendingScreen && loc != '/pending')
+      if (app.isLoggedIn && app.needsPendingScreen && loc != '/pending') {
         return '/pending';
-      if (app.isLoggedIn && !app.needsPendingScreen && loc == '/pending')
+      }
+      if (app.isLoggedIn && !app.needsPendingScreen && loc == '/pending') {
         return '/';
+      }
       return null;
     },
     routes: [
-      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-      GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
-      GoRoute(path: '/pending', builder: (_, __) => const PendingScreen()),
-      GoRoute(path: '/privacy', builder: (_, __) => const PrivacyScreen()),
-      GoRoute(path: '/terms', builder: (_, __) => const TermsScreen()),
+      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
+      GoRoute(path: '/pending', builder: (_, _) => const PendingScreen()),
+      GoRoute(path: '/privacy', builder: (_, _) => const PrivacyScreen()),
+      GoRoute(path: '/terms', builder: (_, _) => const TermsScreen()),
       GoRoute(
         path: '/sections',
-        builder: (_, __) => const SellerSectionsScreen(),
+        builder: (_, _) => const SellerSectionsScreen(),
       ),
-      GoRoute(path: '/orders', builder: (_, __) => const OrdersScreen()),
+      GoRoute(path: '/orders', builder: (_, _) => const OrdersScreen()),
       GoRoute(
         path: '/orders/:id',
         builder: (_, s) => OrderDetailsScreen(id: s.pathParameters['id']!),
       ),
       GoRoute(
         path: '/products/create',
-        builder: (_, __) => const ProductEditScreen(),
+        builder: (_, _) => const ProductEditScreen(),
       ),
       GoRoute(
         path: '/products/edit/:id',
@@ -88,17 +90,17 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/accounting',
-        builder: (_, __) => const AccountingScreen(),
+        builder: (_, _) => const AccountingScreen(),
       ),
-      GoRoute(path: '/wallet', builder: (_, __) => const WalletScreen()),
+      GoRoute(path: '/wallet', builder: (_, _) => const WalletScreen()),
       GoRoute(
         path: '/withdrawals',
-        builder: (_, __) => const WithdrawalsScreen(),
+        builder: (_, _) => const WithdrawalsScreen(),
       ),
-      GoRoute(path: '/reports', builder: (_, __) => const ReportsScreen()),
+      GoRoute(path: '/reports', builder: (_, _) => const ReportsScreen()),
       GoRoute(
         path: '/promos',
-        builder: (_, __) => ResourceListScreen(
+        builder: (_, _) => ResourceListScreen(
           title: 'أكواد الخصم',
           loader: () => app.api.promoCodes(),
           itemTitle: (i) => J.str(i['promo_code']),
@@ -117,7 +119,7 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/flash',
-        builder: (_, __) => ResourceListScreen(
+        builder: (_, _) => ResourceListScreen(
           title: 'عروض فلاش',
           loader: () => app.api.flashSales(),
           itemTitle: (i) => J.str(i['title']),
@@ -135,7 +137,7 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/bxgy',
-        builder: (_, __) => ResourceListScreen(
+        builder: (_, _) => ResourceListScreen(
           title: 'اشترِ واحصل',
           loader: () => app.api.bxgyOffers(),
           itemTitle: (i) => J.str(i['title']).isEmpty
@@ -155,7 +157,7 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/category-discounts',
-        builder: (_, __) => ResourceListScreen(
+        builder: (_, _) => ResourceListScreen(
           title: 'خصم التصنيف',
           loader: () => app.api.categoryDiscounts(),
           itemTitle: (i) => J.str(
@@ -183,7 +185,7 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/delivery-offers',
-        builder: (_, __) => ResourceListScreen(
+        builder: (_, _) => ResourceListScreen(
           title: 'عروض التوصيل المجاني',
           loader: () => app.api.deliveryOffers(),
           itemTitle: (i) => J.str(i['title']),
@@ -201,15 +203,15 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/units',
-        builder: (_, __) =>
+        builder: (_, _) =>
             const NamedCrudScreen(title: 'الوحدات', kind: 'units'),
       ),
-      GoRoute(path: '/bulk', builder: (_, __) => const BulkUploadScreen()),
-      GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
-      GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+      GoRoute(path: '/bulk', builder: (_, _) => const BulkUploadScreen()),
+      GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+      GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
       GoRoute(
         path: '/seller-orders',
-        builder: (_, __) => const SellerOrdersNewScreen(),
+        builder: (_, _) => const SellerOrdersNewScreen(),
       ),
       GoRoute(
         path: '/seller-orders/:id',
@@ -220,12 +222,12 @@ GoRouter buildRouter() {
         builder: (context, state, child) =>
             SellerShell(location: state.uri.path, child: child),
         routes: [
-          GoRoute(path: '/', builder: (_, __) => const DashboardScreen()),
+          GoRoute(path: '/', builder: (_, _) => const DashboardScreen()),
           GoRoute(
             path: '/products',
-            builder: (_, __) => const ProductsScreen(),
+            builder: (_, _) => const ProductsScreen(),
           ),
-          GoRoute(path: '/account', builder: (_, __) => const AccountScreen()),
+          GoRoute(path: '/account', builder: (_, _) => const AccountScreen()),
         ],
       ),
     ],
@@ -258,7 +260,7 @@ class SellerShell extends StatelessWidget {
                       child: Image.asset(
                         'assets/brand/logo.webp',
                         height: 36,
-                        errorBuilder: (_, __, ___) =>
+                        errorBuilder: (_, _, _) =>
                             const Icon(Icons.storefront),
                       ),
                     ),

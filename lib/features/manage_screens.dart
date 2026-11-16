@@ -86,7 +86,7 @@ class _ResourceListScreenState extends State<ResourceListScreen> {
         child: ListView.separated(
           padding: const EdgeInsets.all(12),
           itemCount: items.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (_, i) {
             final item = items[i];
             return ListTile(
@@ -109,7 +109,9 @@ class _ResourceListScreenState extends State<ResourceListScreen> {
                   : IconButton(
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () async {
+                        if (!context.mounted) return;
                         if (!await confirmWrite(context)) return;
+                        if (!context.mounted) return;
                         final ok = await confirmAction(
                           context,
                           title: 'حذف',
@@ -296,8 +298,9 @@ class _PromoFormScreenState extends State<PromoFormScreen> {
                   reason:
                       'سنفتح المعرض لاختيار صورة العرض فقط. لا نصل إلى صورك الأخرى.',
                 );
-                if (file != null && mounted)
+                if (file != null && mounted) {
                   setState(() => imagePath = file.path);
+                }
               },
               icon: const Icon(Icons.image),
               label: Text(
@@ -309,13 +312,16 @@ class _PromoFormScreenState extends State<PromoFormScreen> {
               onPressed: busy
                   ? null
                   : () async {
+                    if (!context.mounted) return;
                       if (!await confirmWrite(context)) return;
                       if (code.text.trim().isEmpty ||
                           discount.text.trim().isEmpty) {
+                            if (!context.mounted) return;
                         toast(context, 'أكمل الكود وقيمة الخصم');
                         return;
                       }
                       if (start.isEmpty || end.isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'حدد تاريخ البداية والنهاية');
                         return;
                       }
@@ -348,7 +354,7 @@ class _PromoFormScreenState extends State<PromoFormScreen> {
                       final result = widget.item == null
                           ? await app.api.savePromo(data)
                           : await app.api.updatePromo(data);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       setState(() => busy = false);
                       toast(context, result.ok ? 'تم الحفظ' : result.message);
                       if (result.ok) Navigator.pop(context, true);
@@ -460,12 +466,15 @@ class _FlashFormScreenState extends State<FlashFormScreen> {
               onPressed: busy
                   ? null
                   : () async {
+                    if (!context.mounted) return;
                       if (!await confirmWrite(context)) return;
                       if (productId == null) {
+                        if (!context.mounted) return;
                         toast(context, 'اختر منتجاً');
                         return;
                       }
                       if (start.isEmpty || end.isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'حدد وقت البداية والنهاية');
                         return;
                       }
@@ -490,7 +499,7 @@ class _FlashFormScreenState extends State<FlashFormScreen> {
                       final result = widget.item == null
                           ? await app.api.saveFlash(data)
                           : await app.api.updateFlash(data);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       setState(() => busy = false);
                       toast(context, result.ok ? 'تم الحفظ' : result.message);
                       if (result.ok) Navigator.pop(context, true);
@@ -630,12 +639,15 @@ class _BxgyFormScreenState extends State<BxgyFormScreen> {
               onPressed: busy
                   ? null
                   : () async {
+                    if (!context.mounted) return;
                       if (!await confirmWrite(context)) return;
                       if (productId == null || productId!.isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'اختر المنتج المشترى');
                         return;
                       }
                       if (start.isEmpty || end.isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'حدد تاريخ البداية والنهاية');
                         return;
                       }
@@ -655,7 +667,7 @@ class _BxgyFormScreenState extends State<BxgyFormScreen> {
                       final result = widget.item == null
                           ? await app.api.saveBxgy(body)
                           : await app.api.updateBxgy(body);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       setState(() => busy = false);
                       toast(context, result.ok ? 'تم الحفظ' : result.message);
                       if (result.ok) Navigator.pop(context, true);
@@ -777,14 +789,17 @@ class _CategoryDiscountFormScreenState
               onPressed: busy
                   ? null
                   : () async {
+                    if (!context.mounted) return;
                       if (!await confirmWrite(context)) return;
                       if (sectionId == null ||
                           sectionId!.isEmpty ||
                           discount.text.trim().isEmpty) {
+                            if (!context.mounted) return;
                         toast(context, 'اختر قسم المتجر وأدخل قيمة الخصم');
                         return;
                       }
                       if (start.isEmpty || end.isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'حدد تاريخ البداية والنهاية');
                         return;
                       }
@@ -803,7 +818,7 @@ class _CategoryDiscountFormScreenState
                       final result = widget.item == null
                           ? await app.api.saveCategoryDiscount(body)
                           : await app.api.updateCategoryDiscount(body);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       setState(() => busy = false);
                       toast(context, result.ok ? 'تم الحفظ' : result.message);
                       if (result.ok) Navigator.pop(context, true);
@@ -956,14 +971,17 @@ class _DeliveryOfferFormScreenState extends State<DeliveryOfferFormScreen> {
               onPressed: busy
                   ? null
                   : () async {
+                    if (!context.mounted) return;
                       if (!await confirmWrite(context)) return;
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       if (title.text.trim().isEmpty) {
+                        if (!context.mounted) return;
                         toast(context, 'أدخل عنوان العرض');
                         return;
                       }
                       if (type == 'schedule' &&
                           (start.isEmpty || end.isEmpty)) {
+                            if (!context.mounted) return;
                         toast(context, 'حدد بداية ونهاية فترة العرض');
                         return;
                       }
@@ -984,7 +1002,7 @@ class _DeliveryOfferFormScreenState extends State<DeliveryOfferFormScreen> {
                       final result = widget.item == null
                           ? await app.api.saveDeliveryOffer(body)
                           : await app.api.updateDeliveryOffer(body);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       setState(() => busy = false);
                       toast(context, result.ok ? 'تم الحفظ' : result.message);
                       if (result.ok) Navigator.pop(context, true);
@@ -1033,6 +1051,7 @@ class _NamedCrudScreenState extends State<NamedCrudScreen> {
   }
 
   Future<void> _edit([Map<String, dynamic>? item]) async {
+    if (!mounted) return;
     if (!await confirmWrite(context)) return;
     final name = TextEditingController(
       text: J.str(item?['name'] ?? item?['title']),
@@ -1041,6 +1060,7 @@ class _NamedCrudScreenState extends State<NamedCrudScreen> {
       text: J.str(item?['short_code'] ?? item?['percentage']),
     );
     String? imagePath;
+    if (!mounted) return;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -1089,6 +1109,7 @@ class _NamedCrudScreenState extends State<NamedCrudScreen> {
     );
     if (ok != true) return;
     if (name.text.trim().isEmpty) {
+      if (!mounted) return;
       toast(context, 'أدخل الاسم');
       return;
     }
@@ -1118,11 +1139,12 @@ class _NamedCrudScreenState extends State<NamedCrudScreen> {
         'status': 1,
         if (item != null) 'id': item['id'],
       };
-      if (imagePath != null)
+      if (imagePath != null) {
         map['image'] = await MultipartFile.fromFile(
           imagePath!,
           filename: 'brand.jpg',
         );
+      }
       final data = FormData.fromMap(map);
       result = item == null
           ? await app.api.saveBrand(data)
@@ -1162,7 +1184,9 @@ class _NamedCrudScreenState extends State<NamedCrudScreen> {
                       ? IconButton(
                           icon: const Icon(Icons.delete_outline),
                           onPressed: () async {
+                            if (!context.mounted) return;
                             if (!await confirmWrite(context)) return;
+                            if (!context.mounted) return;
                             final ok = await confirmAction(
                               context,
                               title: 'حذف',
@@ -1258,6 +1282,7 @@ class _BulkUploadScreenState extends State<BulkUploadScreen> {
                     onPressed: busy || path == null
                         ? null
                         : () async {
+                          if (!context.mounted) return;
                             if (!await confirmWrite(context)) return;
                             setState(() {
                               busy = true;
@@ -1271,7 +1296,7 @@ class _BulkUploadScreenState extends State<BulkUploadScreen> {
                                 ),
                               }),
                             );
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             setState(() {
                               busy = false;
                               resultOk = result.ok;
@@ -1502,11 +1527,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<void> _load() async {
-    if (mounted)
+    if (mounted) {
       setState(() {
         loading = true;
         error = null;
       });
+    }
     final results = await Future.wait([
       app.api.salesReports(startDate: start, endDate: end),
       app.api.productSalesReports(startDate: start, endDate: end),
@@ -1761,8 +1787,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 reason:
                     'سنفتح المعرض لاختيار إثبات العنوان فقط. لا نصل إلى صورك الأخرى.',
               );
-              if (file != null && mounted)
+              if (file != null && mounted) {
                 setState(() => proofPath = file.path);
+              }
             },
           ),
           const SizedBox(height: 12),
@@ -1778,8 +1805,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 reason:
                     'سنفتح المعرض لاختيار صورة البطاقة الوطنية فقط. لا نصل إلى صورك الأخرى.',
               );
-              if (file != null && mounted)
+              if (file != null && mounted) {
                 setState(() => nationalIdPath = file.path);
+              }
             },
           ),
           const SizedBox(height: 20),
@@ -1791,6 +1819,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (name.text.trim().isEmpty ||
                         store.text.trim().isEmpty ||
                         mobile.text.trim().isEmpty) {
+                          if (!context.mounted) return;
                       toast(context, 'أكمل الاسم واسم المتجر والجوال');
                       return;
                     }
@@ -1832,25 +1861,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (stateCtrl.text.trim().isNotEmpty)
                         'state': stateCtrl.text.trim(),
                     };
-                    if (logoPath != null)
+                    if (logoPath != null) {
                       map['store_logo'] = await MultipartFile.fromFile(
                         logoPath!,
                         filename: 'logo.jpg',
                       );
-                    if (proofPath != null)
+                    }
+                    if (proofPath != null) {
                       map['address_proof'] = await MultipartFile.fromFile(
                         proofPath!,
                         filename: 'proof.jpg',
                       );
-                    if (nationalIdPath != null)
+                    }
+                    if (nationalIdPath != null) {
                       map['national_id_card'] = await MultipartFile.fromFile(
                         nationalIdPath!,
                         filename: 'national_id.jpg',
                       );
+                    }
                     final result = await app.api.saveSellerDetails(
                       FormData.fromMap(map),
                     );
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     setState(() => busy = false);
                     if (!context.mounted) return;
                     toast(context, result.ok ? 'تم حفظ الملف' : result.message);
@@ -1878,11 +1910,12 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
   String? error;
 
   Future<void> _load() async {
-    if (mounted)
+    if (mounted) {
       setState(() {
         loading = true;
         error = null;
       });
+    }
     final r = await app.api.sellerSections(activeOnly: false);
     if (!mounted) return;
     setState(() {
@@ -1899,6 +1932,7 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
   }
 
   Future<void> _form([Map<String, dynamic>? item]) async {
+    if (!mounted) return;
     if (!await confirmWrite(context)) return;
     final name = TextEditingController(text: J.str(item?['name']));
     final rowOrder = TextEditingController(
@@ -1910,6 +1944,7 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
     String from = J.str(item?['available_from']);
     String to = J.str(item?['available_to']);
     int status = J.i(item?['status'], 1);
+    if (!mounted) return;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -1950,11 +1985,12 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
                               context: ctx,
                               initialTime: TimeOfDay.now(),
                             );
-                            if (t != null)
+                            if (t != null) {
                               setDlg(
                                 () => from =
                                     '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
                               );
+                            }
                           },
                           child: Text(from.isEmpty ? 'من' : from),
                         ),
@@ -1967,11 +2003,12 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
                               context: ctx,
                               initialTime: TimeOfDay.now(),
                             );
-                            if (t != null)
+                            if (t != null) {
                               setDlg(
                                 () => to =
                                     '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
                               );
+                            }
                           },
                           child: Text(to.isEmpty ? 'إلى' : to),
                         ),
@@ -2008,8 +2045,9 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
       return;
     }
     if (!always && (from.isEmpty || to.isEmpty)) {
-      if (mounted)
+      if (mounted) {
         toast(context, 'حدد وقت البداية والنهاية أو اختر متاح طوال الوقت');
+      }
       return;
     }
     final body = <String, dynamic>{
@@ -2048,7 +2086,7 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
         child: ListView.separated(
           padding: const EdgeInsets.all(12),
           itemCount: items.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (_, i) {
             final it = items[i];
             final always = J.i(it['is_always_available'], 1) == 1;
@@ -2071,7 +2109,9 @@ class _SellerSectionsScreenState extends State<SellerSectionsScreen> {
                   ? IconButton(
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () async {
+                        if (!context.mounted) return;
                         if (!await confirmWrite(context)) return;
+                        if (!context.mounted) return;
                         final ok = await confirmAction(
                           context,
                           title: 'حذف القسم',

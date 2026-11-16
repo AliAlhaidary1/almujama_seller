@@ -589,11 +589,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Future<void> _load() async {
-    if (mounted)
+    if (mounted) {
       setState(() {
         loading = true;
         error = null;
       });
+    }
     // مطابق SellerController@getOrders: search/status/startDate/endDate
     final result = await app.api.orders(
       search: searchCtrl.text.trim(),
@@ -735,7 +736,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: items.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) => _orderCard(items[i]),
     );
   }
@@ -1262,13 +1263,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   IconData _statusIcon(String status) {
     final s = status.toLowerCase();
-    if (s.contains('جديد') || s.contains('new') || s.contains('received'))
+    if (s.contains('جديد') || s.contains('new') || s.contains('received')) {
       return Icons.inbox;
+    }
     if (s.contains('تحضير') || s.contains('prepar')) return Icons.restaurant;
-    if (s.contains('جاهز') || s.contains('pickup') || s.contains('ready'))
+    if (s.contains('جاهز') || s.contains('pickup') || s.contains('ready')) {
       return Icons.check_circle_outline;
-    if (s.contains('dispatch') || s.contains('deliver'))
+    }
+    if (s.contains('dispatch') || s.contains('deliver')) {
       return Icons.local_shipping_outlined;
+    }
     return Icons.sync;
   }
 }
@@ -1335,19 +1339,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
           PopupMenuButton<String>(
             onSelected: (v) async {
               if (v == 'active') {
+                if (!context.mounted) return;
                 final r = await app.api.activeProducts();
-                if (!mounted) return;
+                if (!context.mounted) return;
                 toast(
                   context,
                   r.ok ? 'النشطة: ${r.dataMaps.length}' : r.message,
                 );
-                if (r.ok)
+                if (r.ok) {
                   setState(() {
                     items = r.dataMaps;
                   });
+                }
               } else if (v == 'offers') {
                 final r = await app.api.productsOffers();
-                if (!mounted) return;
+                if (!context.mounted) return;
                 toast(
                   context,
                   r.ok ? 'العروض: ${r.dataMaps.length}' : r.message,
@@ -1357,6 +1363,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 if (mounted) _load();
               } else if (v == 'delete_bulk') {
                 if (!await confirmWrite(context)) return;
+                if (!context.mounted) return;
                 final ok = await confirmAction(
                   context,
                   title: 'حذف جماعي',
@@ -1372,7 +1379,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 if (r.ok) _load();
               } else if (v == 'tags') {
                 final r = await app.api.productTags('a');
-                if (!mounted) return;
+                if (!context.mounted) return;
                 toast(
                   context,
                   r.ok ? 'الوسوم: ${r.dataMaps.length}' : r.message,
@@ -1450,7 +1457,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: items.length + (hasMore ? 1 : 0),
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (_, i) {
                   if (i >= items.length) {
                     return Center(
@@ -1795,7 +1802,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: others.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (_, i) => NetImage(
                     AppConfig.fileUrl(app.apiUrl, others[i]['image']),
                     width: 90,
@@ -1946,7 +1953,7 @@ class _StockAlertsScreenState extends State<StockAlertsScreen> {
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: shown.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (_, i) {
                   final p = shown[i];
                   final active = J.i(p['status']) == 1;
@@ -2453,8 +2460,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     app.api.sellerSections().then((res) {
       if (!mounted) return;
       sections = res.dataMaps;
-      if (sectionId == null && sections.length == 1)
+      if (sectionId == null && sections.length == 1) {
         sectionId = '${sections.first['id']}';
+      }
       setState(() {});
     });
     app.api.units().then((res) {
@@ -2537,10 +2545,11 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     if (inputs.isEmpty) return;
     final row = inputs.first;
     if (next == 'loose') {
-      if (!_isEmptyStock(row.packetPrice.text))
+      if (!_isEmptyStock(row.packetPrice.text)) {
         row.loosePrice.text = row.packetPrice.text;
-      else if (!_isEmptyStock(row.loosePrice.text))
+      } else if (!_isEmptyStock(row.loosePrice.text)) {
         row.packetPrice.text = row.loosePrice.text;
+      }
       if (row.discountedPrice.text.isNotEmpty) {
         row.looseDiscounted.text = row.discountedPrice.text;
       } else if (row.looseDiscounted.text.isNotEmpty) {
@@ -2553,21 +2562,25 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           !_isEmptyStock(row.looseMeasurement.text)) {
         row.packetMeasurement.text = row.looseMeasurement.text;
       }
-      if (isUnlimited != 1 && !_isEmptyStock(row.packetStock.text))
+      if (isUnlimited != 1 && !_isEmptyStock(row.packetStock.text)) {
         looseStock = row.packetStock.text;
+      }
       discountCtrl.text = row.discountedPrice.text;
       priceCtrl.text = row.packetPrice.text;
     } else if (next == 'packet' && prev == 'loose') {
-      if (!_isEmptyStock(row.loosePrice.text))
+      if (!_isEmptyStock(row.loosePrice.text)) {
         row.packetPrice.text = row.loosePrice.text;
-      if (row.looseDiscounted.text.isNotEmpty)
+      }
+      if (row.looseDiscounted.text.isNotEmpty) {
         row.discountedPrice.text = row.looseDiscounted.text;
+      }
       if (_isEmptyStock(row.packetMeasurement.text) &&
           !_isEmptyStock(row.looseMeasurement.text)) {
         row.packetMeasurement.text = row.looseMeasurement.text;
       }
-      if (isUnlimited != 1 && !_isEmptyStock(looseStock))
+      if (isUnlimited != 1 && !_isEmptyStock(looseStock)) {
         row.packetStock.text = looseStock;
+      }
       priceCtrl.text = row.packetPrice.text;
       discountCtrl.text = row.discountedPrice.text;
     }
@@ -3351,11 +3364,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                     reason:
                         'سنفتح المعرض لاختيار صورة المنتج فقط. لا نصل إلى صورك الأخرى.',
                   );
-                  if (file != null && mounted)
+                  if (file != null && mounted) {
                     setState(() {
                       imagePath = file.path;
                       _dirty = true;
                     });
+                  }
                 },
               ),
               const SizedBox(height: 8),
@@ -3733,8 +3747,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                     onChanged: (v) => setState(() {
                                       looseStock = v;
                                       stockCtrl.text = v;
-                                      if (inputs.isNotEmpty)
+                                      if (inputs.isNotEmpty) {
                                         inputs.first.packetStock.text = v;
+                                      }
                                     }),
                                   ),
                                 const SizedBox(height: 10),
@@ -4018,14 +4033,17 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   Future<void> _save() async {
     if (!await confirmWrite(context)) return;
     if (name.text.trim().isEmpty) {
+      if (!mounted) return;
       toast(context, 'أدخل اسم المنتج');
       return;
     }
     if (sectionId == null || sectionId!.isEmpty) {
+      if (!mounted) return;
       toast(context, 'قسم المتجر مطلوب');
       return;
     }
     if (widget.id == null && imagePath == null) {
+      if (!mounted) return;
       toast(context, 'الصورة الرئيسية مطلوبة');
       return;
     }
@@ -4046,8 +4064,10 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       }
       looseUnitId ??= _defaultUnitId;
       if (isUnlimited == 1) {
+        if (!mounted) return;
         looseStock = '0';
       } else if (_isEmptyStock(looseStock)) {
+      if (!mounted) return;
         toast(context, 'أدخل كمية المخزون');
         return;
       }
@@ -4055,14 +4075,17 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       final row = inputs.first;
       row.packetStockUnitId ??= _defaultUnitId;
       if (isUnlimited == 1) {
+        if (!mounted) return;
         row.packetStock.text = '0';
       } else if (_isEmptyStock(row.packetStock.text)) {
+      if (!mounted) return;
         toast(context, 'أدخل كمية المخزون');
         return;
       }
     }
     final basePrice = double.tryParse(priceCtrl.text.trim()) ?? 0;
     if (basePrice <= 0) {
+      if (!mounted) return;
       toast(context, 'أدخل السعر');
       return;
     }
@@ -4070,6 +4093,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     if (baseDisc.isNotEmpty) {
       final d = double.tryParse(baseDisc) ?? -1;
       if (d >= basePrice) {
+        if (!mounted) return;
         setState(() => discountError = 'سعر الخصم يجب أن يكون أقل من السعر');
         toast(context, 'سعر الخصم يجب أن يكون أقل من السعر');
         return;
@@ -4079,6 +4103,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       final c = deliveryCharge.text.trim();
       final v = double.tryParse(c);
       if (c.isEmpty || v == null || v < 0) {
+        if (!mounted) return;
         toast(context, 'أدخل أجرة توصيل المتجر');
         return;
       }
@@ -4097,6 +4122,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     }
     setState(() => busy = true);
     try {
+      if (!mounted) return;
       final map = <String, dynamic>{
         'name': name.text.trim(),
         'slug': slugify(name.text),
@@ -4192,8 +4218,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           return v.isEmpty ? '0' : v;
         }).toList();
         map['loose_discounted_price[]'] = inputs.asMap().entries.map((en) {
-          if (en.key == 0 && discountCtrl.text.isNotEmpty)
+          if (en.key == 0 && discountCtrl.text.isNotEmpty) {
             return discountCtrl.text;
+          }
           final v = en.value.looseDiscounted.text.isNotEmpty
               ? en.value.looseDiscounted.text
               : en.value.discountedPrice.text;
@@ -4205,8 +4232,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       }
       if (widget.id != null) {
         map['id'] = widget.id;
-        if (deleteImageIds.isNotEmpty)
+        if (deleteImageIds.isNotEmpty) {
           map['deleteImageIds'] = '[${deleteImageIds.join(',')}]';
+        }
       }
       if (imagePath != null) {
         map['image'] = await MultipartFile.fromFile(
@@ -4232,7 +4260,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           _allowPop = true;
         }
       });
-      if (!context.mounted) return;
+      if (!mounted) return;
       toast(context, result.ok ? 'تم الحفظ' : result.message);
       if (result.ok) {
         await WidgetsBinding.instance.endOfFrame;
@@ -4240,7 +4268,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       }
     } catch (e) {
       if (mounted) setState(() => busy = false);
-      if (context.mounted) toast(context, 'تعذر الحفظ');
+      if (!mounted) return;
+      toast(context, 'تعذر الحفظ');
     }
   }
 }
@@ -4853,9 +4882,10 @@ class _PushStatusTileState extends State<_PushStatusTile> {
       onTap: _busy
           ? () {}
           : () async {
+            if (!context.mounted) return;
               setState(() => _busy = true);
               final granted = await PushService.requestPermission();
-              if (!mounted) return;
+              if (!context.mounted) return;
               setState(() => _busy = false);
               toast(
                 context,

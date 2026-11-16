@@ -369,7 +369,7 @@ class _SellerOrdersNewScreenState extends State<SellerOrdersNewScreen> {
               child: ListView.separated(
                 padding: const EdgeInsets.all(12),
                 itemCount: items.length + (page < lastPage ? 1 : 0),
-                separatorBuilder: (_, __) => const SizedBox(height: 8),
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
                 itemBuilder: (_, i) {
                   if (i >= items.length) {
                     // ترقيم الصفحات — الباكند يرقّم 20 لكل صفحة.
@@ -650,8 +650,10 @@ class _SellerOrderNewDetailsScreenState
 
   // إلغاء الطلب — مثل الويب: سبب عبر prompt (الفارغ مسموح)
   Future<void> _cancel() async {
+    if (!mounted) return;
     if (busy) return;
     if (!await confirmWrite(context)) return;
+    if (!mounted) return;
     final reasonCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
@@ -800,8 +802,9 @@ class _SellerOrderNewDetailsScreenState
       cash = num.tryParse(ctrl.text.trim());
       ctrl.dispose();
       if (ok != true || cash == null || cash + 0.009 < remaining || !mounted) {
-        if (ok == true && mounted)
+        if (ok == true && mounted) {
           toast(context, 'يجب تحصيل كامل المبلغ المتبقي');
+        }
         return;
       }
     }
@@ -821,12 +824,13 @@ class _SellerOrderNewDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    if (loading)
+    if (loading) {
       return Scaffold(
         appBar: AppBar(title: Text('طلب ${widget.id}')),
         body: const BrandedSkeletonList(count: 3),
       );
-    if (order.isEmpty)
+    }
+    if (order.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text('طلب ${widget.id}')),
         body: FetchBody(
@@ -837,6 +841,7 @@ class _SellerOrderNewDetailsScreenState
           child: const SizedBox.shrink(),
         ),
       );
+    }
     final fulfillment = J.str(order['fulfillment_status']);
     final courier = J.map(order['delivery_assignment']);
     final sellerTask = J.map(order['seller_delivery_task']);

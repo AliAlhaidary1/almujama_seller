@@ -566,8 +566,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       _otpSuccess = null;
                                       _showDelayHint = false;
                                       _editingPhone = false;
-                                      if (view == 'login')
+                                      if (view == 'login') {
                                         _otpGate.resetBackground();
+                                      }
                                     }),
                               icon: Icon(
                                 view == 'login'
@@ -1277,6 +1278,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onPressed: otpBusy
                                           ? null
                                           : () async {
+                                            if (!context.mounted) return;
                                               final m = mobile.text.trim();
                                               if (m.isEmpty) {
                                                 setState(
@@ -1291,7 +1293,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               });
                                               final r = await app.api
                                                   .sendRegisterOtp(m);
-                                              if (!mounted) return;
+                                              if (!context.mounted) return;
                                               setState(() {
                                                 otpBusy = false;
                                                 otpBypassed =
@@ -1345,6 +1347,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onPressed: otpBusy
                                           ? null
                                           : () async {
+                                            if (!context.mounted) return;
                                               if (otpCtrl.text.trim().isEmpty) {
                                                 toast(context, 'أدخل الرمز');
                                                 return;
@@ -1354,7 +1357,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 mobile.text.trim(),
                                                 otpCtrl.text.trim(),
                                               );
-                                              if (!mounted) return;
+                                              if (!context.mounted) return;
                                               setState(() {
                                                 otpBusy = false;
                                                 otpVerified = r.ok;
@@ -1596,8 +1599,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     reason:
                                         'سنفتح المعرض لاختيار شعار المتجر فقط. لا نصل إلى صورك الأخرى.',
                                   );
-                                  if (file != null && mounted)
+                                  if (file != null && mounted) {
                                     setState(() => logoPath = file.path);
+                                  }
                                 },
                               ),
                             ),
@@ -1617,8 +1621,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     reason:
                                         'سنفتح المعرض لاختيار صورة الهوية فقط لأغراض التحقق.',
                                   );
-                                  if (file != null && mounted)
+                                  if (file != null && mounted) {
                                     setState(() => nationalIdPath = file.path);
+                                  }
                                 },
                               ),
                             ),
@@ -2006,11 +2011,12 @@ class _TermsScreenState extends State<TermsScreen> {
   String? error;
 
   Future<void> _load() async {
-    if (mounted)
+    if (mounted) {
       setState(() {
         loading = true;
         error = null;
       });
+    }
     final r = await app.api.termsConditions();
     if (!mounted) return;
     setState(() {
